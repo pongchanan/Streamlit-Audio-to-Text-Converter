@@ -1,4 +1,4 @@
-from pydub import AudioSegment
+from pydub import AudioSegment, silence
 
 # Specify the exact path to the ffmpeg.exe file
 AudioSegment.converter = "C:/Users/pongc/Downloads/ffmpeg-master-latest-win64-gpl/ffmpeg-master-latest-win64-gpl/bin/ffmpeg.exe"
@@ -11,4 +11,7 @@ st.markdown("---")
 audio = st.file_uploader("Upload your audio file", type=["mp3", "wav"])
 if audio:
     audio_segment = AudioSegment.from_file(audio)
-    st.write(audio_segment)
+    chunks = silence.split_on_silence(audio_segment, min_silence_len=100, silence_thresh=audio_segment.dBFS-20, keep_silence=100)
+    
+    for chunk in chunks:
+        print(chunk)
