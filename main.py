@@ -1,6 +1,7 @@
 from pydub import AudioSegment, silence
 import streamlit as st
 import speech_recognition as sr
+import os
 
 recog = sr.Recognizer()
 
@@ -27,5 +28,13 @@ if audio:
                 final_result = final_result + " " + text
             except:
                 final_result = final_result + " " +  "Unaudioable"
-        
-    st.text_area("text", value=final_result)
+    
+    with st.form("Result"):
+        result = st.text_area("text", value=final_result)
+        d_btn = st.form_submit_button("Download")
+        if d_btn:
+            envir_var = os.environ
+            usr_loc = envir_var.get("USERPROFILE")
+            loc = usr_loc + "\\Downloads\\transcript.txt"
+            with open(loc, "w") as file:
+                file.write(result)
